@@ -1,0 +1,642 @@
+basePath: /api/v1
+definitions:
+  pr-reviewers-service_internal_generated_api_v1_handler.CreatePullRequestResponse:
+    properties:
+      pr:
+        $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequest'
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.DeactivateTeamUsersResponse:
+    properties:
+      affected_pull_requests:
+        description: AffectedPullRequests Список PR где были изменены ревьюверы
+        items:
+          $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequestShort'
+        type: array
+      team:
+        $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.Team'
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.DummyLoginOut:
+    properties:
+      token:
+        type: string
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse:
+    properties:
+      error:
+        properties:
+          code:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponseErrorCode'
+          message:
+            type: string
+        type: object
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponseErrorCode:
+    enum:
+    - BAD_REQUEST
+    - NO_CANDIDATE
+    - NOT_ASSIGNED
+    - NOT_FOUND
+    - PR_EXISTS
+    - PR_MERGED
+    - TEAM_EXISTS
+    - UNKNOWN
+    type: string
+    x-enum-varnames:
+    - BADREQUEST
+    - NOCANDIDATE
+    - NOTASSIGNED
+    - NOTFOUND
+    - PREXISTS
+    - PRMERGED
+    - TEAMEXISTS
+    - UNKNOWN
+  pr-reviewers-service_internal_generated_api_v1_handler.GetUserReviewPRsResponse:
+    properties:
+      pull_requests:
+        items:
+          $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequestShort'
+        type: array
+      user_id:
+        type: string
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.MergePullRequestResponse:
+    properties:
+      pr:
+        $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequest'
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.PatchTeamDeactivateUsersJSONRequestBody:
+    properties:
+      team_name:
+        type: string
+      user_ids:
+        description: UserIds Список ID пользователей для деактивации
+        items:
+          type: string
+        minItems: 1
+        type: array
+    required:
+    - team_name
+    - user_ids
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.PostPullRequestCreateJSONRequestBody:
+    properties:
+      author_id:
+        type: string
+      pull_request_id:
+        type: string
+      pull_request_name:
+        type: string
+    required:
+    - author_id
+    - pull_request_id
+    - pull_request_name
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.PostPullRequestMergeJSONRequestBody:
+    properties:
+      pull_request_id:
+        type: string
+    required:
+    - pull_request_id
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.PostPullRequestReassignJSONRequestBody:
+    properties:
+      old_reviewer_id:
+        type: string
+      pull_request_id:
+        type: string
+    required:
+    - old_reviewer_id
+    - pull_request_id
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.PostTeamAddJSONRequestBody:
+    properties:
+      members:
+        items:
+          $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.TeamMember'
+        type: array
+      team_name:
+        type: string
+    required:
+    - members
+    - team_name
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.PostUsersSetIsActiveJSONRequestBody:
+    properties:
+      is_active:
+        type: boolean
+      user_id:
+        type: string
+    required:
+    - user_id
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.PullRequest:
+    properties:
+      assigned_reviewers:
+        description: AssignedReviewers user_id назначенных ревьюверов (0..2)
+        items:
+          type: string
+        type: array
+      author_id:
+        type: string
+      created_at:
+        type: string
+      merged_at:
+        type: string
+      pull_request_id:
+        type: string
+      pull_request_name:
+        type: string
+      status:
+        $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequestStatus'
+    required:
+    - assigned_reviewers
+    - author_id
+    - pull_request_id
+    - pull_request_name
+    - status
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.PullRequestShort:
+    properties:
+      author_id:
+        type: string
+      pull_request_id:
+        type: string
+      pull_request_name:
+        type: string
+      status:
+        $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequestShortStatus'
+    required:
+    - author_id
+    - pull_request_id
+    - pull_request_name
+    - status
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.PullRequestShortStatus:
+    enum:
+    - MERGED
+    - OPEN
+    type: string
+    x-enum-varnames:
+    - PullRequestShortStatusMERGED
+    - PullRequestShortStatusOPEN
+  pr-reviewers-service_internal_generated_api_v1_handler.PullRequestStatus:
+    enum:
+    - MERGED
+    - OPEN
+    type: string
+    x-enum-varnames:
+    - PullRequestStatusMERGED
+    - PullRequestStatusOPEN
+  pr-reviewers-service_internal_generated_api_v1_handler.ReassignPullRequestResponse:
+    properties:
+      pr:
+        $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequest'
+      replaced_by:
+        description: ReplacedBy user_id нового ревьювера
+        type: string
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.ReviewerAssignmentCount:
+    properties:
+      assignment_count:
+        description: AssignmentCount Количество PR, где пользователь был назначен
+          ревьювером
+        type: integer
+      reviewer_id:
+        type: string
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.ReviewersStatsResponse:
+    properties:
+      reviewers:
+        description: Reviewers Список ревьюверов с количеством назначений
+        items:
+          $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ReviewerAssignmentCount'
+        type: array
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.SetUserActiveStatusResponse:
+    properties:
+      user:
+        $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.User'
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.Team:
+    properties:
+      members:
+        items:
+          $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.TeamMember'
+        type: array
+      team_name:
+        type: string
+    required:
+    - members
+    - team_name
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.TeamMember:
+    properties:
+      is_active:
+        type: boolean
+      user_id:
+        type: string
+      username:
+        type: string
+    required:
+    - user_id
+    - username
+    type: object
+  pr-reviewers-service_internal_generated_api_v1_handler.User:
+    properties:
+      is_active:
+        type: boolean
+      team_name:
+        type: string
+      user_id:
+        type: string
+      username:
+        type: string
+    required:
+    - team_name
+    - user_id
+    - username
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a service for working with PR Reviewers.
+  title: PR Reviewers service
+  version: "1.0"
+paths:
+  /dummyLogin:
+    post:
+      consumes:
+      - application/json
+      description: Get JWT token for testing purposes
+      operationId: DummyLogin
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully logged in
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.DummyLoginOut'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+      summary: Dummy login
+      tags:
+      - User
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: Check service health and DB connection
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Service health
+          schema:
+            additionalProperties: true
+            type: object
+        "503":
+          description: Service unhealth
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Health check
+      tags:
+      - Health
+  /pullRequest/create:
+    post:
+      consumes:
+      - application/json
+      description: Create PR and automatically assign up to 2 reviewers from author's
+        team
+      operationId: CreatePullRequest
+      parameters:
+      - description: Pull request data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PostPullRequestCreateJSONRequestBody'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: PR successfully created
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.CreatePullRequestResponse'
+        "400":
+          description: Bad request (PR already exists or invalid data)
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "404":
+          description: Author not found
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "422":
+          description: Validation failed
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+      summary: Create pull request
+      tags:
+      - PullRequests
+  /pullRequest/merge:
+    post:
+      consumes:
+      - application/json
+      description: Merge an existing pull request
+      operationId: MergePullRequest
+      parameters:
+      - description: Pull request merge data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PostPullRequestMergeJSONRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: PR successfully merged or already merged
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.MergePullRequestResponse'
+        "400":
+          description: Invalid request data
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "404":
+          description: Pull request not found
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "422":
+          description: Validation failed
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+      summary: Merge pull request
+      tags:
+      - PullRequests
+  /pullRequest/reassign:
+    post:
+      consumes:
+      - application/json
+      description: Replace one reviewer with another from the same team
+      operationId: ReassignPullRequest
+      parameters:
+      - description: Reassignment data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PostPullRequestReassignJSONRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Reviewer successfully reassigned
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ReassignPullRequestResponse'
+        "400":
+          description: Invalid request data
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "404":
+          description: Pull request, reviewer, author not found or no available reviewers
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "409":
+          description: Pull request already merged
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "422":
+          description: Validation failed
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+      summary: Reassign pull request reviewer
+      tags:
+      - PullRequests
+  /stats/reviewers:
+    get:
+      description: Get assignment count statistics for all reviewers
+      operationId: GetReviewersStats
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Statistics successfully retrieved
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ReviewersStatsResponse'
+        "404":
+          description: Reviewers data not found
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+      summary: Get reviewers assignment statistics
+      tags:
+      - Statistics
+  /team/add:
+    post:
+      consumes:
+      - application/json
+      description: Create a new team with members (creates/updates users)
+      operationId: AddTeam
+      parameters:
+      - description: Team data with members
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PostTeamAddJSONRequestBody'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Team successfully created
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.Team'
+        "304":
+          description: No changes - team exists and no users were changed or added
+        "400":
+          description: Validation failed or duplicate users
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+      summary: Create team with members
+      tags:
+      - Teams
+  /team/deactivateUsers:
+    patch:
+      consumes:
+      - application/json
+      description: Deactivate multiple users in a team and handle PR reassignments
+      operationId: DeactivateTeamUsers
+      parameters:
+      - description: Team deactivation data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PatchTeamDeactivateUsersJSONRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Users successfully deactivated
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.DeactivateTeamUsersResponse'
+        "400":
+          description: Invalid request data
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "404":
+          description: Team, users, or pull requests not found
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "409":
+          description: User does not belong to the specified team
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "422":
+          description: Validation failed
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+      summary: Deactivate team users
+      tags:
+      - Teams
+  /team/get:
+    get:
+      consumes:
+      - application/json
+      description: Get team details with members by team name
+      operationId: GetTeam
+      parameters:
+      - description: Team name
+        in: query
+        name: team_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Team found successfully
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.Team'
+        "400":
+          description: Invalid team_name parameter
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "404":
+          description: Team not found
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+      summary: Get team information
+      tags:
+      - Teams
+  /user/review:
+    get:
+      consumes:
+      - application/json
+      description: Get all pull requests assigned to user for review
+      operationId: GetUserReviewPRs
+      parameters:
+      - description: User ID
+        format: uuid
+        in: query
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved pull requests
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.GetUserReviewPRsResponse'
+        "400":
+          description: Missing or invalid user_id
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "404":
+          description: User not found or no active reviewers
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+      summary: Get users pull requests for review
+      tags:
+      - Reviews
+  /users/setIsActive:
+    post:
+      consumes:
+      - application/json
+      description: Activate or deactivate a user
+      operationId: SetIsActive
+      parameters:
+      - description: User status data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PostUsersSetIsActiveJSONRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User status successfully updated
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.SetUserActiveStatusResponse'
+        "304":
+          description: User already has the target status (no changes)
+        "400":
+          description: Invalid request data
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "422":
+          description: Validation failed
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse'
+      summary: Set user active status
+      tags:
+      - Users
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

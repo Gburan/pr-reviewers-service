@@ -1,0 +1,372 @@
+{
+	"info": {
+		"_postman_id": "d4ab4747-cab5-400f-b4fe-bc4235f3a92b",
+		"name": "PrPeviewers",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40051081"
+	},
+	"item": [
+		{
+			"name": "/dummyLogin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/v1/dummyLogin",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"dummyLogin"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "/add_team",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"team_name\": \"payments\",\r\n  \"members\": [\r\n    {\r\n      \"user_id\": \"123e4567-e89b-12d3-a456-426614174005\",\r\n      \"username\": \"Alice\",\r\n      \"is_active\": false\r\n    },\r\n    {\r\n        \"user_id\": \"123e4567-e89b-12d3-a456-426614174006\",\r\n        \"username\": \"Alice2\",\r\n        \"is_active\": true\r\n    },\r\n    {\r\n        \"user_id\": \"123e4567-e89b-12d3-a456-426614174007\",\r\n        \"username\": \"Alice3\",\r\n        \"is_active\": true\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/v1/team/add",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"team",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/health",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/get_team",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/v1/team/get?team_name=payments",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"team",
+						"get"
+					],
+					"query": [
+						{
+							"key": "team_name",
+							"value": "payments"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/users/setIsActive",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174005\",\r\n  \"is_active\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/v1/users/setIsActive",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"setIsActive"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/pullRequest/create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"pull_request_id\": \"123e4567-e89b-12d3-a456-426614174034\",\r\n  \"pull_request_name\": \"Add search\",\r\n  \"author_id\": \"123e4567-e89b-12d3-a456-426614174005\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/v1/pullRequest/create",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"pullRequest",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/pullRequest/merge",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"pull_request_id\": \"123e4567-e89b-12d3-a456-426614174031\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/v1/pullRequest/merge",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"pullRequest",
+						"merge"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/pullRequest/reassign",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"pull_request_id\": \"123e4567-e89b-12d3-a456-426614174030\",\r\n  \"old_reviewer_id\": \"123e4567-e89b-12d3-a456-426614174006\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/v1/pullRequest/reassign",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"pullRequest",
+						"reassign"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/users/getReview",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/v1/users/getReview?user_id=123e4567-e89b-12d3-a456-426614174006",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"getReview"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "123e4567-e89b-12d3-a456-426614174006"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/statistics/reviewers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/v1/statistics/reviewers",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"statistics",
+						"reviewers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/team/deactivateUsers",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"team_name\": \"payments\",\r\n    \"user_ids\": [\r\n        \"123e4567-e89b-12d3-a456-426614174006\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/v1/team/deactivateUsers",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"team",
+						"deactivateUsers"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,41 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.24.9'
+      - name: Install protoc and dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y protobuf-compiler
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+          go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+      - name: Install tools
+        run: |
+          go install github.com/bufbuild/buf/cmd/buf@latest
+          go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
+          go install github.com/golang/mock/mockgen@latest
+      - name: Install dependencies
+        run: go mod tidy
+      - name: Create directories
+        run: mkdir -p internal/generated/api/v1/{proto,handler}
+      - name: Generate
+        run: go generate ./...
+      - name: Build
+        run: |
+          go clean -cache
+          go build -v ./...

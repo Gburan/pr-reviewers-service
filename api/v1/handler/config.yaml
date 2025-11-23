@@ -1,0 +1,4 @@
+package: handler
+output: ../internal/generated/api/v1/handler/dto.gen.go
+generate:
+  models: true

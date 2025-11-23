@@ -1,0 +1,952 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a service for working with PR Reviewers.",
+        "title": "PR Reviewers service",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/dummyLogin": {
+            "post": {
+                "description": "Get JWT token for testing purposes",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Dummy login",
+                "operationId": "DummyLogin",
+                "responses": {
+                    "200": {
+                        "description": "Successfully logged in",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.DummyLoginOut"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "description": "Check service health and DB connection",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Health check",
+                "responses": {
+                    "200": {
+                        "description": "Service health",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "503": {
+                        "description": "Service unhealth",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/pullRequest/create": {
+            "post": {
+                "description": "Create PR and automatically assign up to 2 reviewers from author's team",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PullRequests"
+                ],
+                "summary": "Create pull request",
+                "operationId": "CreatePullRequest",
+                "parameters": [
+                    {
+                        "description": "Pull request data",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PostPullRequestCreateJSONRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "PR successfully created",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.CreatePullRequestResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (PR already exists or invalid data)",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Author not found",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/pullRequest/merge": {
+            "post": {
+                "description": "Merge an existing pull request",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PullRequests"
+                ],
+                "summary": "Merge pull request",
+                "operationId": "MergePullRequest",
+                "parameters": [
+                    {
+                        "description": "Pull request merge data",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PostPullRequestMergeJSONRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "PR successfully merged or already merged",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.MergePullRequestResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request data",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Pull request not found",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/pullRequest/reassign": {
+            "post": {
+                "description": "Replace one reviewer with another from the same team",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PullRequests"
+                ],
+                "summary": "Reassign pull request reviewer",
+                "operationId": "ReassignPullRequest",
+                "parameters": [
+                    {
+                        "description": "Reassignment data",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PostPullRequestReassignJSONRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reviewer successfully reassigned",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ReassignPullRequestResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request data",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Pull request, reviewer, author not found or no available reviewers",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Pull request already merged",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/stats/reviewers": {
+            "get": {
+                "description": "Get assignment count statistics for all reviewers",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Statistics"
+                ],
+                "summary": "Get reviewers assignment statistics",
+                "operationId": "GetReviewersStats",
+                "responses": {
+                    "200": {
+                        "description": "Statistics successfully retrieved",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ReviewersStatsResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Reviewers data not found",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/team/add": {
+            "post": {
+                "description": "Create a new team with members (creates/updates users)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Teams"
+                ],
+                "summary": "Create team with members",
+                "operationId": "AddTeam",
+                "parameters": [
+                    {
+                        "description": "Team data with members",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PostTeamAddJSONRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Team successfully created",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.Team"
+                        }
+                    },
+                    "304": {
+                        "description": "No changes - team exists and no users were changed or added"
+                    },
+                    "400": {
+                        "description": "Validation failed or duplicate users",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/team/deactivateUsers": {
+            "patch": {
+                "description": "Deactivate multiple users in a team and handle PR reassignments",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Teams"
+                ],
+                "summary": "Deactivate team users",
+                "operationId": "DeactivateTeamUsers",
+                "parameters": [
+                    {
+                        "description": "Team deactivation data",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PatchTeamDeactivateUsersJSONRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Users successfully deactivated",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.DeactivateTeamUsersResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request data",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Team, users, or pull requests not found",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "User does not belong to the specified team",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/team/get": {
+            "get": {
+                "description": "Get team details with members by team name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Teams"
+                ],
+                "summary": "Get team information",
+                "operationId": "GetTeam",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Team name",
+                        "name": "team_name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Team found successfully",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.Team"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid team_name parameter",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Team not found",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/review": {
+            "get": {
+                "description": "Get all pull requests assigned to user for review",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get users pull requests for review",
+                "operationId": "GetUserReviewPRs",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved pull requests",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.GetUserReviewPRsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Missing or invalid user_id",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found or no active reviewers",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/setIsActive": {
+            "post": {
+                "description": "Activate or deactivate a user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Set user active status",
+                "operationId": "SetIsActive",
+                "parameters": [
+                    {
+                        "description": "User status data",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PostUsersSetIsActiveJSONRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User status successfully updated",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.SetUserActiveStatusResponse"
+                        }
+                    },
+                    "304": {
+                        "description": "User already has the target status (no changes)"
+                    },
+                    "400": {
+                        "description": "Invalid request data",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "pr-reviewers-service_internal_generated_api_v1_handler.CreatePullRequestResponse": {
+            "type": "object",
+            "properties": {
+                "pr": {
+                    "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequest"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.DeactivateTeamUsersResponse": {
+            "type": "object",
+            "properties": {
+                "affected_pull_requests": {
+                    "description": "AffectedPullRequests Список PR где были изменены ревьюверы",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequestShort"
+                    }
+                },
+                "team": {
+                    "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.Team"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.DummyLoginOut": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "object",
+                    "properties": {
+                        "code": {
+                            "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponseErrorCode"
+                        },
+                        "message": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.ErrorResponseErrorCode": {
+            "type": "string",
+            "enum": [
+                "BAD_REQUEST",
+                "NO_CANDIDATE",
+                "NOT_ASSIGNED",
+                "NOT_FOUND",
+                "PR_EXISTS",
+                "PR_MERGED",
+                "TEAM_EXISTS",
+                "UNKNOWN"
+            ],
+            "x-enum-varnames": [
+                "BADREQUEST",
+                "NOCANDIDATE",
+                "NOTASSIGNED",
+                "NOTFOUND",
+                "PREXISTS",
+                "PRMERGED",
+                "TEAMEXISTS",
+                "UNKNOWN"
+            ]
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.GetUserReviewPRsResponse": {
+            "type": "object",
+            "properties": {
+                "pull_requests": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequestShort"
+                    }
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.MergePullRequestResponse": {
+            "type": "object",
+            "properties": {
+                "pr": {
+                    "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequest"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.PatchTeamDeactivateUsersJSONRequestBody": {
+            "type": "object",
+            "required": [
+                "team_name",
+                "user_ids"
+            ],
+            "properties": {
+                "team_name": {
+                    "type": "string"
+                },
+                "user_ids": {
+                    "description": "UserIds Список ID пользователей для деактивации",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.PostPullRequestCreateJSONRequestBody": {
+            "type": "object",
+            "required": [
+                "author_id",
+                "pull_request_id",
+                "pull_request_name"
+            ],
+            "properties": {
+                "author_id": {
+                    "type": "string"
+                },
+                "pull_request_id": {
+                    "type": "string"
+                },
+                "pull_request_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.PostPullRequestMergeJSONRequestBody": {
+            "type": "object",
+            "required": [
+                "pull_request_id"
+            ],
+            "properties": {
+                "pull_request_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.PostPullRequestReassignJSONRequestBody": {
+            "type": "object",
+            "required": [
+                "old_reviewer_id",
+                "pull_request_id"
+            ],
+            "properties": {
+                "old_reviewer_id": {
+                    "type": "string"
+                },
+                "pull_request_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.PostTeamAddJSONRequestBody": {
+            "type": "object",
+            "required": [
+                "members",
+                "team_name"
+            ],
+            "properties": {
+                "members": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.TeamMember"
+                    }
+                },
+                "team_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.PostUsersSetIsActiveJSONRequestBody": {
+            "type": "object",
+            "required": [
+                "user_id"
+            ],
+            "properties": {
+                "is_active": {
+                    "type": "boolean"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.PullRequest": {
+            "type": "object",
+            "required": [
+                "assigned_reviewers",
+                "author_id",
+                "pull_request_id",
+                "pull_request_name",
+                "status"
+            ],
+            "properties": {
+                "assigned_reviewers": {
+                    "description": "AssignedReviewers user_id назначенных ревьюверов (0..2)",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "author_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "merged_at": {
+                    "type": "string"
+                },
+                "pull_request_id": {
+                    "type": "string"
+                },
+                "pull_request_name": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequestStatus"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.PullRequestShort": {
+            "type": "object",
+            "required": [
+                "author_id",
+                "pull_request_id",
+                "pull_request_name",
+                "status"
+            ],
+            "properties": {
+                "author_id": {
+                    "type": "string"
+                },
+                "pull_request_id": {
+                    "type": "string"
+                },
+                "pull_request_name": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequestShortStatus"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.PullRequestShortStatus": {
+            "type": "string",
+            "enum": [
+                "MERGED",
+                "OPEN"
+            ],
+            "x-enum-varnames": [
+                "PullRequestShortStatusMERGED",
+                "PullRequestShortStatusOPEN"
+            ]
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.PullRequestStatus": {
+            "type": "string",
+            "enum": [
+                "MERGED",
+                "OPEN"
+            ],
+            "x-enum-varnames": [
+                "PullRequestStatusMERGED",
+                "PullRequestStatusOPEN"
+            ]
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.ReassignPullRequestResponse": {
+            "type": "object",
+            "properties": {
+                "pr": {
+                    "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.PullRequest"
+                },
+                "replaced_by": {
+                    "description": "ReplacedBy user_id нового ревьювера",
+                    "type": "string"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.ReviewerAssignmentCount": {
+            "type": "object",
+            "properties": {
+                "assignment_count": {
+                    "description": "AssignmentCount Количество PR, где пользователь был назначен ревьювером",
+                    "type": "integer"
+                },
+                "reviewer_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.ReviewersStatsResponse": {
+            "type": "object",
+            "properties": {
+                "reviewers": {
+                    "description": "Reviewers Список ревьюверов с количеством назначений",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.ReviewerAssignmentCount"
+                    }
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.SetUserActiveStatusResponse": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.User"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.Team": {
+            "type": "object",
+            "required": [
+                "members",
+                "team_name"
+            ],
+            "properties": {
+                "members": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/pr-reviewers-service_internal_generated_api_v1_handler.TeamMember"
+                    }
+                },
+                "team_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.TeamMember": {
+            "type": "object",
+            "required": [
+                "user_id",
+                "username"
+            ],
+            "properties": {
+                "is_active": {
+                    "type": "boolean"
+                },
+                "user_id": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "pr-reviewers-service_internal_generated_api_v1_handler.User": {
+            "type": "object",
+            "required": [
+                "team_name",
+                "user_id",
+                "username"
+            ],
+            "properties": {
+                "is_active": {
+                    "type": "boolean"
+                },
+                "team_name": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
